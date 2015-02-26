@@ -26,9 +26,11 @@ end
 
 
 def stock_picker(prices)
-	buy, sell = 0
+	buy = 0
+	sell = 0
 	potential_profit = 0
-=begin with top, bottom initialized to prices[0]
+=begin old solution
+	#with top, bottom initialized to prices[0]
 	for i in 1...prices.length
 		if prices[i] > top
 			top = prices[i]
@@ -47,24 +49,21 @@ def stock_picker(prices)
 		end
 =end
 
-	for i in 1...prices.length
-		if prices[i] > prices[sell]
+	prices.each_with_index do |price, i|
+		next if i == 0
+		if price > prices[sell]
 			sell = i
 			potential_profit = prices[sell]-prices[buy]
-		elsif prices[i] < prices[buy]
-			for j in i...prices.length
-				if prices[j]-prices[i] > potential_profit
+		elsif price < prices[buy]
+			prices.each_with_index do |price2, j|
+				next if j < i
+				if price2-price > potential_profit
 					buy = i
 					sell = j
-					potential_profit = prices[sell]-prices[buy]
+					potential_profit = price2-price
 				end
 			end
 		end
-
-
-
-
-
 	end
 	return [buy, sell]
 end
@@ -92,7 +91,7 @@ end
 p caesar_cipher("What a string!", 5)
 
 
-p stock_picker([17,3,6,9,15,8,6,1,10]).inspect
+p stock_picker([17,3,6,9,15,8,6,1,10])
 
 
 dictionary = ["below","down","go","going","horn","how","howdy","it","i","low","own","part","partner","sit"]
